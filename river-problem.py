@@ -1,64 +1,66 @@
-from queue import Queue
-import wikipediaapi
-import time
+import copy
 
-user_agent = "Grace's'sWikipediaGame/1.0 (Ya3719eu0415@pusd.us)"
+# Define a function that takes in a state as a dictionary and returns True if the state meets the conditions and False if it does not
+def isValid(state):
 
-wiki_wiki = wikipediaapi.Wikipedia(user_agent, "en")
+    if state["wolf"] == state["goat"] and state["wolf"] != state["person"]:
+        return False
+    elif state["goat"] == state["cabbage"] and state["goat"] != state["person"]:
+        return False
+    else:
+        return True
 
-# HELPER FUNCTION: fetch_links(page) passes in a wikipedia page and returns a list of all the pages linked from that page
-def fetch_links(page):
-    links_list = []
-    links = page.links
-    for title in sorted(links.keys()):
-        links_list.append(title)
-        
-    return links_list
+# Define a function that takes in a state as a dictionary and returns a list of all valid states that can be reached from 1 move of the input state
+# This function will need to call the function isValid(state)
+def get_next_states(state):
 
-#IN CLASS: Finish the definition of the wikipedia_game_solver using a Breadth-First-Search Traversal
-def wikipedia_game_solver(start_page, target_page):
-    print('Working on it...')
-    start_time = time.time()
-  
-    visited = []
-    queue = Queue()
-    path =[]
-    parent = {}
+    next_state = []
+    same_side = []
 
-    queue.put(start_page.title)
-    visited.append(start_page.title)
+    for thing in state:
+        if state[thing] == state ["person"]:
+            same_side.append(thing)
 
-    while not queue.empty():
-        current_title = queue.get()
-        if current_title == target_page.title:
-            break
+    for thing in same_side
+        next_state = copy.deepcopy(state)
+        next_state[thing] =  not state[thing]
+        next_state["person"] = not state["person"]
 
-        current_page = wiki_wiki.page(current_title)
-        next_level = fetch_links(current_page)
-        visited.append(current_title)
+            if (isValid(next_state)) == True:
+                next_states.append(next_state)
+    just_person = copy.deepcopy(state)
+    just_person["person"] = not state["person"]
 
-        for node in next_level:
-            if node not in visited: 
-                queue.put(node)
-                parent[node] = current_title
-    child = target_page.title
-    while child != start_page.title:
-            path.append(child)
-            child = parent[child]
-    path.append(start_page.title)
-    path.reverse()
+    if isValid(just_person) == True:
+        next_states.append(just_person)
 
-    # queue.get()
-    # queue.put(page)
+    return next_states
+# Define a recursive function that takes in a current_state and win_state and returns the path to those states using the Depth First Search algorithm
+# This function will need to call the function get_next_states(state), as well as itself
+def dfs(current_state, win_state):
+    
+    
+# Test your code! Does it solve the river crossing riddle?
+initial_state = {
+    "wolf": False,
+    "goat": False,
+    "cabbage": False,
+    "person": False
+}
 
-    end_time = time.time()
-    print("This algorithm took", end_time-start_time, "seconds to run!")
-  
-    return path
+win_state = {
+    "wolf": True,
+    "goat": True,
+    "cabbage": True,
+    "person": True
+}
 
-# Example usage:
-start_page = wiki_wiki.page('pasta')
-target_page = wiki_wiki.page('Italian language')
-path = wikipedia_game_solver(start_page, target_page)
-print("Shortest path:", path)
+visited_states = [initial_state]
+path = []
+
+if dfs(initial_state, win_state):
+    for index, step in enumerate(path):
+        print("After move", index+1, "the state is ", step)
+else:
+    print("No solution found.")
 
