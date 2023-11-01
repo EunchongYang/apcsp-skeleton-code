@@ -14,19 +14,19 @@ def isValid(state):
 # This function will need to call the function isValid(state)
 def get_next_states(state):
 
-    next_state = []
+    next_states = []
     same_side = []
 
     for thing in state:
-        if state[thing] == state ["person"]:
+        if state[thing] == state ["person"] and thing != "person":
             same_side.append(thing)
 
-    for thing in same_side
+    for thing in same_side:
         next_state = copy.deepcopy(state)
         next_state[thing] =  not state[thing]
         next_state["person"] = not state["person"]
 
-            if (isValid(next_state)) == True:
+        if (isValid(next_state)) == True:
                 next_states.append(next_state)
     just_person = copy.deepcopy(state)
     just_person["person"] = not state["person"]
@@ -41,10 +41,10 @@ def dfs(current_state, win_state):
     if current_state == win_state:
         return True
     
-    next_state = get_next_states(current_state)
+    next_states = get_next_states(current_state)
     visited_states.append(current_state)
     
-    for state in next_state:
+    for state in next_states:
         if state not in visited_states:
             path.append(state)
             if dfs(state, win_state) == True:
